@@ -2,6 +2,8 @@
 
 Laravel Eloquent allows you to query the count of a relationship using `withCount`. Aggregate extends Eloquent by adding `withSum`, `withAvg`, `withMin` and `withMax`.
 
+This is based off the work in [`laravel/framework#25319`](https://github.com/laravel/framework/pull/25319) - thanks to Mohammad Sharif Ahrari ([@spyp](https://github.com/spyp)).
+
 ## Installation
 
 You can install the package via Composer:
