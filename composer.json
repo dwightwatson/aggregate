@@ -1,0 +1,46 @@
+{
+    "name": "watson/aggregate",
+    "description": "Extend Laravel's query builder with additional relation aggregates.",
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "aggregations"
+    ],
+    "homepage": "https://github.com/dwightwatson/aggregate",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dwight Watson",
+            "email": "dwight@studiousapp.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "illuminate/database": "^5.7"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Watson\\Aggregate\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Watson\\Aggregate\\AggregateServiceProvider"
+            ]
+        }
+    }
+}
