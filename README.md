@@ -17,7 +17,11 @@ composer require watson/aggregate
 The additional methods will be added by Laravel's autodiscovery feature. You can then use them the same way you already use `withCount`. [See the Laravel documentation for more on how this works](https://laravel.com/docs/5.7/eloquent-relationships#counting-related-models).
 
 ```php
-Order::withSum('products')->get();
+$orders = Order::withSum('products', 'quantity')->get();
+
+$orders->each(function ($order) {
+    echo $order->products_quantity;
+});
 ```
 
 ### Testing
