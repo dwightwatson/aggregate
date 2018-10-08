@@ -20,7 +20,22 @@ The additional methods will be added by Laravel's autodiscovery feature. You can
 $orders = Order::withSum('products', 'quantity')->get();
 
 $orders->each(function ($order) {
-    echo $order->products_quantity;
+    echo $order->products_sum;
+});
+```
+
+```php
+$orders = Order::withCount('products')->withSum('products as products_price','price')->get();
+ $orders->each(function ($order) {
+    echo $order->products_count;
+    echo $order->products_price;
+});
+```
+ ```php
+$orders = Order::withCount('products')->withMax('products','price')->get();
+ $orders->each(function ($order) {
+    echo $order->products_count;
+    echo $order->products_max;
 });
 ```
 
