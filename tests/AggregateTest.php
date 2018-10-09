@@ -4,12 +4,17 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Orchestra\Testbench\TestCase;
 
 class AggregateTest extends TestCase
 {
     public function setUp()
     {
         parent::setUp();
+
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+
+        $this->artisan('migrate');
 
         DB::table('orders')->insert([
             'reference' => '12345678',
@@ -22,6 +27,23 @@ class AggregateTest extends TestCase
         ]);
     }
 
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('database.default', 'testbench');
+
+        $app['config']->set('database.connections.testbench', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            \Watson\Aggregate\AggregateServiceProvider::class,
+        ];
+    }
     public function testWithCount()
     {
         $actual = Order::withAggregate('products', 'count', '*')->first();
