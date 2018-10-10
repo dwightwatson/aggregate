@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Watson\Aggregate\Tests;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;

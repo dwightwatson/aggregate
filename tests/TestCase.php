@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Watson\Aggregate\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
