@@ -15,13 +15,13 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "illuminate/database": "^5.7"
+        "php": "^7.2",
+        "illuminate/database": "~6.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.1",
-        "orchestra/testbench": "~3.0",
-        "phpunit/phpunit": "^7.0"
+        "orchestra/testbench": "~4.0",
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {

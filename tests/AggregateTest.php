@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AggregateTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
