@@ -4,6 +4,7 @@ namespace Watson\Aggregate\Tests;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Watson\Aggregate\AggregateModel;
 
 class AggregateTest extends TestCase
 {
@@ -101,7 +102,7 @@ class AggregateTest extends TestCase
         $this->assertEquals($expected->higher_price, $actual->higher_price);
     }
 
-    public function testWithSumPricesAndCountQ2uantityWithAliases()
+    public function testWithSumPricesAndCountQuantityWithAliases()
     {
         $actual = Order::withSum('products as order_price', 'price')->withSum('products as order_products_count', 'quantity')->withCount('products')->first();
 
@@ -112,7 +113,52 @@ class AggregateTest extends TestCase
         $this->assertEquals($expected->order_price, $actual->order_price);
         $this->assertEquals($expected->products_count, $actual->products_count);
         $this->assertEquals($expected->order_products_count, $actual->order_products_count);
-        }
+    }
+
+    public function testWithSumPricesAndCountUsingAggregate()
+    {
+        $actual = OrderWithAggregate::first();
+
+        $expected = DB::select(
+            DB::raw('select (select sum(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_price", (select sum(quantity) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_products_count", (select count(*) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_count" from "orders"')
+        )[0];
+
+        $this->assertEquals($expected->order_price, $actual->order_price);
+        $this->assertEquals($expected->products_count, $actual->products_count);
+        $this->assertEquals($expected->order_products_count, $actual->order_products_count);
+    }
+}
+
+class OrderWithAggregate extends AggregateModel
+{
+
+    protected $table = "orders";
+
+    protected $withCount = [
+        "products"
+    ];
+
+    protected $withSum = [
+        ["products as order_price", "price"],
+        ["products as order_products_count", "quantity"]
+    ];
+
+    protected $withMin = [
+        ["products", "price"]
+    ];
+
+    protected $withMax = [
+        ["products", "price"]
+    ];
+
+    protected $withAvg = [
+        ["products", "price"]
+    ];
+
+    public function products()
+    {
+        return $this->hasMany(ProductOrder::class, 'order_id');
+    }
 }
 
 class Order extends Model
