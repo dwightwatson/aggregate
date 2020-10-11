@@ -25,7 +25,8 @@ class AggregateTest extends TestCase
 
     public function testWithCount()
     {
-        $actual = Order::withAggregate('products', 'count', '*')->first();
+        $actual = Order::withAggregate('products', 'count', '*')
+            ->first();
 
         $expected = DB::select(
             DB::raw('select (select count(*) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_count" from "orders"')
@@ -36,7 +37,8 @@ class AggregateTest extends TestCase
 
     public function testWithSum()
     {
-        $actual = Order::withSum('products', 'quantity')->first();
+        $actual = Order::withSum('products', 'quantity')
+            ->first();
 
         $expected = DB::select(
             DB::raw('select (select sum(quantity) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_sum" from "orders"')
@@ -47,7 +49,8 @@ class AggregateTest extends TestCase
 
     public function testWithAvg()
     {
-        $actual = Order::withAvg('products', 'price')->first();
+        $actual = Order::withAvg('products', 'price')
+            ->first();
 
         $expected = DB::select(
             DB::raw('select (select avg(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_avg" from "orders"')
@@ -58,7 +61,8 @@ class AggregateTest extends TestCase
 
     public function testWithMin()
     {
-        $actual = Order::withMin('products', 'price')->first();
+        $actual = Order::withMin('products', 'price')
+            ->first();
 
         $expected = DB::select(
             DB::raw('select (select min(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_min" from "orders"')
@@ -69,7 +73,8 @@ class AggregateTest extends TestCase
 
     public function testWithMax()
     {
-        $actual = Order::withMax('products', 'price')->first();
+        $actual = Order::withMax('products', 'price')
+            ->first();
 
         $expected = DB::select(
             DB::raw('select (select max(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_max" from "orders"')
@@ -80,7 +85,8 @@ class AggregateTest extends TestCase
 
     public function testWithMinAndAlias()
     {
-        $actual = Order::withMin('products as min_price', 'price')->first();
+        $actual = Order::withMin('products as min_price', 'price')
+            ->first();
 
         $expected = DB::select(
             DB::raw('select (select min(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "min_price" from "orders"')
@@ -104,7 +110,10 @@ class AggregateTest extends TestCase
 
     public function testWithSumPricesAndCountQuantityWithAliases()
     {
-        $actual = Order::withSum('products as order_price', 'price')->withSum('products as order_products_count', 'quantity')->withCount('products')->first();
+        $actual = Order::withSum('products as order_price', 'price')
+            ->withSum('products as order_products_count', 'quantity')
+            ->withCount('products')
+            ->first();
 
         $expected = DB::select(
             DB::raw('select (select sum(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_price", (select sum(quantity) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_products_count", (select count(*) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_count" from "orders"')
