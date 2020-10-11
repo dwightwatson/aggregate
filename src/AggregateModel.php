@@ -2,17 +2,20 @@
 
 namespace Watson\Aggregate;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Loads the Aggregate options in the new Query method.
  * This loads just like withCount
  */
-class AggregateModel extends Model
+abstract class AggregateModel extends Model
 {
 
     /**
      * The relationship sums that should be eager loaded on every query.
+     * Each entry is an array shaped like so:
+     *  [relationship, column]
      *
      * @var array
      */
@@ -20,6 +23,8 @@ class AggregateModel extends Model
 
     /**
      * The relationship averages that should be eager loaded on every query.
+     * Each entry is an array shaped like so:
+     *  [relationship, column]
      *
      * @var array
      */
@@ -27,6 +32,8 @@ class AggregateModel extends Model
 
     /**
      * The relationship maximums that should be eager loaded on every query.
+     * Each entry is an array shaped like so:
+     *  [relationship, column]
      *
      * @var array
      */
@@ -34,6 +41,8 @@ class AggregateModel extends Model
 
     /**
      * The relationship minimums that should be eager loaded on every query.
+     * Each entry is an array shaped like so:
+     *  [relationship, column]
      *
      * @var array
      */
@@ -49,11 +58,23 @@ class AggregateModel extends Model
         $query = parent::newQueryWithoutScopes();
 
         // Check that the Aggregate Service Provider is loaded.
-        if(method_exists($this, "withAggregate")) {
-            $query->withSum($this->withSum)
-                ->withAvg($this->withAvg)
-                ->withMax($this->withMax)
-                ->withMin($this->withMin);
+        if(Builder::hasGlobalMacro("withAggregate")) {
+            foreach($this->withSum as $entry) {
+                [$relationship, $column] = is_array($entry) ? $entry : [$entry];
+                $query->withSum($relationship, $column);
+            }
+            foreach($this->withAvg as $entry) {
+                [$relationship, $column] = is_array($entry) ? $entry : [$entry];
+                $query->withAvg($relationship, $column);
+            }
+            foreach($this->withMax as $entry) {
+                [$relationship, $column] = is_array($entry) ? $entry : [$entry];
+                $query->withMax($relationship, $column);
+            }
+            foreach($this->withMin as $entry) {
+                [$relationship, $column] = is_array($entry) ? $entry : [$entry];
+                $query->withMin($relationship, $column);
+            }
         }
 
         return $query;
