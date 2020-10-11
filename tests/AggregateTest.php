@@ -129,12 +129,16 @@ class AggregateTest extends TestCase
         $actual = OrderWithAggregate::first();
 
         $expected = DB::select(
-            DB::raw('select (select sum(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_price", (select sum(quantity) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_products_count", (select count(*) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_count" from "orders"')
+            DB::raw('select (select sum(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_price", (select count(*) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_count", (select sum(quantity) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "order_products_count", (select min(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_min_price", (select max(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_max_price", (select avg(price) from "product_orders" where "orders"."id" = "product_orders"."order_id") as "products_avg_price" from "orders"')
         )[0];
 
+        // TODO: Test more of the returned results. (Just look at the previous tests to get the values expected)
         $this->assertEquals($expected->order_price, $actual->order_price);
         $this->assertEquals($expected->products_count, $actual->products_count);
         $this->assertEquals($expected->order_products_count, $actual->order_products_count);
+        $this->assertEquals($expected->products_min_price, $actual->products_min_price);
+        $this->assertEquals($expected->products_max_price, $actual->products_max_price);
+        $this->assertEquals($expected->products_avg_price, $actual->products_avg_price);
     }
 }
 
@@ -153,15 +157,15 @@ class OrderWithAggregate extends AggregateModel
     ];
 
     protected $withMin = [
-        ["products", "price"]
+        ["products as products_min_price", "price"]
     ];
 
     protected $withMax = [
-        ["products", "price"]
+        ["products as products_max_price", "price"]
     ];
 
     protected $withAvg = [
-        ["products", "price"]
+        ["products as products_avg_price", "price"]
     ];
 
     public function products()
